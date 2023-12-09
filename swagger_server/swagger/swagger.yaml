@@ -1,0 +1,162 @@
+openapi: 3.0.0
+info:
+  title: USERS API
+  contact:
+    name: Mahdi Alhakim
+    email: 0mahdialhakim@gmail.com
+  license:
+    name: MIT
+  version: 1.0.0
+servers:
+- url: http://localhost:8080
+paths:
+  /api/users/:
+    get:
+      description: Get all the stored users in the database
+      operationId: get_users
+      responses:
+        "200":
+          description: Successfully Obtained All Stored Users.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+                x-content-type: application/json
+        default:
+          description: Failed to GET Stored Users.
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+  /api/users/fuzzysearch:
+    get:
+      description: Get all the stored users in the database
+      operationId: search_users
+      parameters:
+      - name: search_string
+        in: query
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successfully Obtained All Found Users.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+                x-content-type: application/json
+        default:
+          description: Failed to GET Stored Users.
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+  /api/users/{userID}:
+    get:
+      description: Get the user in the database with given ID.
+      operationId: get_user_by_id
+      parameters:
+      - name: userID
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successfully Obtained User By ID.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+                x-content-type: application/json
+        default:
+          description: Failed to GET User.
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+  /api/users/newUser:
+    post:
+      description: "Send Post Request to create a new user with {name, username, password,\
+        \ email}"
+      operationId: post_new_user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/new_user_request_body'
+        required: true
+      responses:
+        "200":
+          description: Successfuly Created a New User with a specific unique ID
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: 0
+                x-content-type: application/json
+        default:
+          description: Failed to Create new User
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+components:
+  schemas:
+    User:
+      required:
+      - email
+      - first_name
+      - last_name
+      - password
+      - user_id
+      type: object
+      properties:
+        first_name:
+          type: string
+          example: John
+        last_name:
+          type: string
+          example: Doe
+        password:
+          type: string
+          format: password
+          example: password123
+        email:
+          type: string
+          example: john.doe@example.com
+        user_id:
+          type: string
+          example: bhjdhgjbjb46vhf
+      example:
+        first_name: John
+        last_name: Doe
+        password: password123
+        email: john.doe@example.com
+        user_id: bhjdhgjbjb46vhf
+    new_user_request_body:
+      required:
+      - email
+      - first_name
+      - last_name
+      - password
+      type: object
+      properties:
+        first_name:
+          type: string
+          example: John
+        last_name:
+          type: string
+          example: Doe
+        password:
+          type: string
+          format: password
+          example: password123
+        email:
+          type: string
+          example: john.doe@example.com
+      example:
+        first_name: John
+        last_name: Doe
+        password: password123
+        email: john.doe@example.com
+
